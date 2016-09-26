@@ -43,10 +43,14 @@ Article.loadAll = function(dataWePassIn) {
 
 Article.fetchAll = function() {
   if (localStorage.hackerIpsum) {
-    /* When our data is already in localStorage:
-    1. We can process it (sort and instantiate),
-    2. Then we can render the index page. */
+    //  When our data is already in localStorage:
+    // 1. We can process it (sort and instantiate),
+    var jsData = JSON.parse(localStorage.hackerIpsum);
+    Article.loadAll(jsData);
+    //articleView.renderIndexPage();
+    // 2. Then we can render the index page.
     // Article.loadAll(// TODO: Invoke with our localStorage! Should we parse or stringify this?);
+
     // TODO: Now let's render the index page.
   } else {
     /* TODO: Otherwise, without our localStorage data, we need to:
@@ -56,9 +60,24 @@ Article.fetchAll = function() {
      1. Load our json data,
      2. Store that data in localStorage so we can skip the server call next time.
      3. And then render the index page. */
-  }
+    $.ajax('data/hackerIpsum.json', {
+      method: 'GET',
+      success: successHandler,
+      error: errorHandler,
+    });
+    function successHandler(data) {
+      Article.loadAll(data);
+      articleView.renderIndexPage();
+      var dataString = JSON.stringify(data);
+      localStorage.setItem('hackerIpsum', dataString);
+    };
+    function errorHandler(error) {
+      console.log('ERROR', error);
+    };
+  };
 };
 
+//Article.fetchAll();
 
 
 

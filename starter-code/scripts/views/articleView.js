@@ -54,6 +54,7 @@ articleView.setTeasers = function() {
   });
 };
 
+
 articleView.renderIndexPage = function() {
   Article.all.forEach(function(a){
     $('#articles').append(a.toHtml('#article-template'));
@@ -70,3 +71,6 @@ articleView.renderIndexPage = function() {
   articleView.setTeasers();
 };
 // TODO: start the retrieval process for our data!
+
+Article.fetchAll();
+articleView.renderIndexPage();
