@@ -4,6 +4,8 @@ function Article (opts) {
   }
 }
 
+var articles = [];
+
 /* TODO: Instead of a global `articles = []` array, let's track this list of all
  articles directly on the constructor function. Note: it is NOT on the prototype.
  In JavaScript, functions are themselves objects, which means we can add
@@ -11,8 +13,6 @@ function Article (opts) {
  to track, that relates to ALL of the Article objects, so it does not belong on
  the prototype, as that would only be relevant to a single instantiated Article.
  */
-
-Article.all = [];
 
 Article.prototype.toHtml = function(scriptTemplateId) {
   var template = Handlebars.compile($(scriptTemplateId).text());
@@ -30,49 +30,10 @@ Article.prototype.toHtml = function(scriptTemplateId) {
 /* TODO: Refactor this code into a function for greater control.
     It will take in our data, and process it via the Article constructor: */
 
-Article.loadAll = function(dataWePassIn) {
-  dataWePassIn.sort(function(a,b) {
-    return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
-  }).forEach(function(ele) {
-    Article.all.push(new Article(ele));
-  });
-};
+ourLocalData.sort(function(a,b) {
+  return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
+});
 
-/* This function below will retrieve the data from either a local or remote
- source, process it, then hand off control to the View: */
-
-Article.fetchAll = function() {
-  if (localStorage.hackerIpsum) {
-    /* When our data is already in localStorage:
-    1. We can process it (sort and instantiate),
-    2. Then we can render the index page. */
-    // Article.loadAll(// TODO: Invoke with our localStorage! Should we parse or stringify this?);
-    // TODO: Now let's render the index page.
-  } else {
-    /* TODO: Otherwise, without our localStorage data, we need to:
-    - Retrive our JSON file asynchronously
-     (which jQuery method method is best for this?).
-     Within this method, we should:
-     1. Load our json data,
-     2. Store that data in localStorage so we can skip the server call next time.
-     3. And then render the index page. */
-  }
-};
-
-
-
-
-
-
-
-/* Great work so far! STRETCH GOAL TIME!? Refactor your fetchAll above, or
-   get some additional typing practice here. Our main goal in this part of the
-   lab will be saving the eTag located in Headers, to see if it's been updated!
-
-  Article.fetchAll = function() {
-    if (localStorage.hackerIpsum) {
-      // Let's make a request to get the eTag (hint: you may need to use a different
-      // jQuery method for this more explicit request).
-    } else {}
-  }
-*/
+ourLocalData.forEach(function(ele) {
+  articles.push(new Article(ele));
+});
